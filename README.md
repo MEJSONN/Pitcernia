@@ -65,7 +65,8 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-```APP_NAME=Pitcernia
+```
+APP_NAME=Pitcernia
 APP_ENV=local
 APP_KEY=base64:oaOJeVKq+2gB1Hnl2kOb9zF/NQ1f7Zl6Z8SyZWlykEM=
 APP_DEBUG=true
@@ -88,11 +89,11 @@ LOG_LEVEL=debug
 
 # ✅ Zdalna baza danych (serwer 3.125.38.149)
 DB_CONNECTION=mysql
-DB_HOST=3.125.38.149
+DB_HOST=localhost
 DB_PORT=3306
 DB_DATABASE=pitcernia
-DB_USERNAME=admin
-DB_PASSWORD=zaq1@WSX
+DB_USERNAME=root
+DB_PASSWORD=
 
 SESSION_DRIVER=database
 SESSION_LIFETIME=120
@@ -117,10 +118,10 @@ MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USERNAME=pitcernia.notify@gmail.com
-MAIL_PASSWORD=zxgp lsgi zxrb ndcu
+MAIL_PASSWORD="zxgp lsgi zxrb ndcu"
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=pitcernia.notify@gmail.com
-MAIL_FROM_NAME="Pitcernia"
+MAIL_FROM_NAME=Pitcernia
 
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
@@ -129,4 +130,6 @@ AWS_BUCKET=
 AWS_USE_PATH_STYLE_ENDPOINT=false
 
 VITE_APP_NAME="${APP_NAME}"
+#123
+
 ```
