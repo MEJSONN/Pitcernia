@@ -1,0 +1,38 @@
+@import "bootstrap/scss/bootstrap";
+
+/* Pasek nawigacyjny */
+.navbar-nav .nav-link {
+    font-size: 15;
+    margin-right: 15px;
+}
+
+/* Ikony */
+.navbar-nav .nav-link i {
+    font-size: 1.4rem;
+    color: #333;
+}
+
+.navbar-nav .nav-link:hover i {
+    color: #007bff;
+}
+
+.navbar-nav .nav-link {
+    font-weight: normal;
+    /* Domyślnie zwykła czcionka */
+    transition: font-weight 0.2s, color 0.2s;
+}
+
+.navbar-nav .nav-link.active {
+    font-weight: bold;
+    /* Pogrubienie aktywnego linku */
+    color: #007bff !important;
+    /* Podkreślenie aktywnego linku */
+    font-weight: 700;
+}
+
+.big-navbar {
+    height: 80px;
+    /* Możesz dostosować wartość */
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
