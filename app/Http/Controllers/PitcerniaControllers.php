@@ -61,6 +61,10 @@ class PitcerniaControllers extends Controller
         //$basket = Basket::all();
         return view('pitcernia.basket');
     }
+    public function Orders()
+    {
+        return view('pitcernia.orders');
+    }
     public function admin()
     {
         $users = User::all();
