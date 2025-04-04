@@ -68,7 +68,7 @@
                                         {{ Auth::user()->name }}
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="/dashboard">Moje zamówienia</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('orders') }}">Moje zamówienia</a></li>
                                         <li><a class="dropdown-item" href="#">Ustawienia</a></li>
                                         <li>
                                             <a class="dropdown-item" href="{{ route('logout') }} "

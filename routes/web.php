@@ -13,6 +13,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/', [PitcerniaControllers::class, 'index'])->name('main');
 
 Route::get('/basket', [PitcerniaControllers::class, 'basket'])->name('basket');
+Route::get('/orders', [PitcerniaControllers::class, 'orders'])->name('orders');
 
 
 Route::middleware(['auth'])->group(function () {
