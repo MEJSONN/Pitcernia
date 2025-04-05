@@ -64,23 +64,33 @@
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        data-bs-toggle="dropdown" aria-expanded="false">
                                         {{ Auth::user()->name }}
                                     </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="{{ route('orders') }}">Moje zamówienia</a></li>
-                                        <li><a class="dropdown-item" href="#">Ustawienia</a></li>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navbarDropdown">
                                         <li>
-                                            <a class="dropdown-item" href="{{ route('logout') }} "
-                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Wyloguj
-                                                się</a>
+                                            <a class="dropdown-item" href="{{ route('orders') }}">
+                                                <i class="bi bi-basket-fill me-2"></i>Moje zamówienia
+                                            </a>
                                         </li>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                            class="d-none">
+                                        <li>
+                                            <a class="dropdown-item" href="#">
+                                                <i class="bi bi-gear-fill me-2"></i>Ustawienia
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item text-danger" href="{{ route('logout') }}"
+                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                <i class="bi bi-box-arrow-right me-2"></i>Wyloguj się
+                                            </a>
+                                        </li>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                             @csrf
                                         </form>
                                     </ul>
                                 </li>
+                                
                             @endguest
                         </ul>
                     </div>
@@ -98,6 +108,7 @@
     <footer class="text-center py-3 mt-5 bg-light border-top mh-25">
         &copy;2025 Pitcernia. Wszystkie prawa zastrzeżone.
     </footer>
+    @stack('scripts')
 </body>
 
 </html>
