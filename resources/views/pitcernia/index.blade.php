@@ -143,7 +143,7 @@
             <div class="col">
                 <div class="card h-100 cursor-pointer shadow" data-bs-toggle="modal"
                     data-bs-target="#Pizza_{{ $itemId }}">
-                    <img src="{{ asset('images/' . $itemId . '.jpeg') }}" class="card-img-top" alt="{{ $itemId }}">
+                    <img src="{{ asset('images/' . $itemId . '.jpeg') }}" class="card-img-top w-100 h-100" alt="{{ $itemId }}">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h5 class="card-title">{{ $item->name }}</h5>
