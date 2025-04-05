@@ -9,8 +9,7 @@
 
                     <!-- Obraz i opis -->
                     <div class="col-md-5 d-flex align-items-center gap-3">
-                        <img src="{{ asset('images/wolina.jpeg') }}" style="width: 100px"
-                            class="rounded">
+                        <img src="{{ asset('images/wolina.jpeg') }}" style="width: 100px" class="rounded">
                         <div>
                             <h5 class="mb-1">Wolina</h5>
                             <small class="text-muted">Sos, szynka, ser</small>
@@ -20,11 +19,10 @@
                     <!-- Ilość -->
                     <div class="col-md-3 d-flex justify-content-center">
                         <div class="input-group" style="max-width: 160px;">
-                            <button class="btn btn-outline-secondary" type="button"
-                                onclick="decreaseValue(this)">−</button>
-                            <input type="number" class="form-control text-center" value="1" min="1">
-                            <button class="btn btn-outline-secondary" type="button"
-                                onclick="increaseValue(this)">+</button>
+                            <button class="btn btn-outline-secondary btn-minus" type="button">−</button>
+                            <input type="number" class="form-control text-center quantity-input" value="1"
+                                min="1">
+                            <button class="btn btn-outline-secondary btn-plus" type="button">+</button>
                         </div>
                     </div>
 
@@ -35,10 +33,9 @@
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
-
                 </div>
             </div>
-            
+
 
             <!-- Drugie danie -->
             <div class="border rounded p-3 bg-light shadow-sm mb-3">
@@ -46,8 +43,7 @@
 
                     <!-- Obraz i opis -->
                     <div class="col-md-5 d-flex align-items-center gap-3">
-                        <img src="{{ asset('images/wolina.jpeg') }}" style="width: 100px"
-                            class="rounded">
+                        <img src="{{ asset('images/wolina.jpeg') }}" style="width: 100px" class="rounded">
                         <div>
                             <h5 class="mb-1">Wolina</h5>
                             <small class="text-muted">Sos, szynka, ser</small>
@@ -57,11 +53,10 @@
                     <!-- Ilość -->
                     <div class="col-md-3 d-flex justify-content-center">
                         <div class="input-group" style="max-width: 160px;">
-                            <button class="btn btn-outline-secondary" type="button"
-                                onclick="decreaseValue(this)">−</button>
-                            <input type="number" class="form-control text-center" value="1" min="1">
-                            <button class="btn btn-outline-secondary" type="button"
-                                onclick="increaseValue(this)">+</button>
+                            <button class="btn btn-outline-secondary btn-minus" type="button">−</button>
+                            <input type="number" class="form-control text-center quantity-input" value="1"
+                                min="1">
+                            <button class="btn btn-outline-secondary btn-plus" type="button">+</button>
                         </div>
                     </div>
 
@@ -95,3 +90,18 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('click', e => {
+        if (e.target.matches('.btn-plus')) {
+            const input = e.target.closest('.input-group').querySelector('input');
+            input.value = +input.value + 1;
+        }
+        if (e.target.matches('.btn-minus')) {
+            const input = e.target.closest('.input-group').querySelector('input');
+            if (+input.value > 1) input.value = +input.value - 1;
+        }
+    });
+</script>
+@endpush
