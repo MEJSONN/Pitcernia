@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use App\Models\User;
+use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth as AuthAlias;
 
 class PitcerniaControllers extends Controller
 {
@@ -70,5 +73,76 @@ class PitcerniaControllers extends Controller
         $users = User::all();
         return view('pitcernia.admin', compact('users'));
     }
+
+    public function addToCart(Request $request)
+    {
+        $cart = session()->get('cart', []);
+
+        $id = $request->input('id');
+        $name = $request->input('name');
+        $price = $request->input('price');
+
+        if (isset($cart[$id])) {
+            $cart[$id]['quantity']++;
+        } else {
+            $cart[$id] = [
+                'name' => $name,
+                'price' => $price,
+                'quantity' => 1,
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        return response()->json(['success' => true, 'message' => 'Dodano do koszyka']);
+    }
+    public function update(Request $request, $id)
+{
+    $cart = session()->get('cart', []);
+    if (isset($cart[$id])) {
+        if ($request->action === 'increase') {
+            $cart[$id]['quantity']++;
+        } elseif ($request->action === 'decrease' && $cart[$id]['quantity'] > 1) {
+            $cart[$id]['quantity']--;
+        }
+    }
+    session()->put('cart', $cart);
+    return redirect()->back();
+}
+
+public function remove($id)
+{
+    $cart = session()->get('cart', []);
+    unset($cart[$id]);
+    session()->put('cart', $cart);
+    return redirect()->back();
+}
+
+public function submitOrder(Request $request)
+{
+    $cart = session('cart', []);
+
+    if (empty($cart)) {
+        return redirect()->back()->with('error', 'Koszyk jest pusty.');
+    }
+
+    $total = 0;
+    foreach ($cart as $item) {
+        $total += $item['price'] * $item['quantity'];
+    }
+
+    $user = Auth::user();
+
+    Order::create([
+        'customer_name' => $user ? $user->name : 'Gość', // użyjemy imienia użytkownika, jeśli jest zalogowany
+        'address' => 'Opole, Kościuszki 69', // można też zrobić $user->address
+        'items' => $cart,
+        'total_price' => $total,
+    ]);
+
+    session()->forget('cart');
+
+    return redirect()->route('home')->with('success', 'Zamówienie zostało złożone!');
+}
 
 }

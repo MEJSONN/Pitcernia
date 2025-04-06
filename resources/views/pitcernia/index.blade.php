@@ -143,7 +143,8 @@
             <div class="col">
                 <div class="card h-100 cursor-pointer shadow" data-bs-toggle="modal"
                     data-bs-target="#Pizza_{{ $itemId }}">
-                    <img src="{{ asset('images/' . $itemId . '.jpeg') }}" class="card-img-top w-100 h-100" alt="{{ $itemId }}">
+                    <img src="{{ asset('images/' . $itemId . '.jpeg') }}" class="card-img-top w-100 h-100"
+                        alt="{{ $itemId }}">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h5 class="card-title">{{ $item->name }}</h5>
@@ -186,7 +187,9 @@
                                 <span class="text-muted fw-bold">{{ $item->size }}</span>
                             </div>
                             <div class="text-center mt-3">
-                                <button class="btn btn-outline-secondary btn-lg w-100 shadow" type="button">
+                                <button class="btn btn-outline-secondary btn-lg w-100 shadow add-to-cart-btn"
+                                    data-id="{{ $itemId }}" data-name="{{ $item->name }}"
+                                    data-price="{{ $item->price }}">
                                     <i class="bi bi-cart-plus me-2"></i> Dodaj do koszyka
                                 </button>
                             </div>
@@ -197,4 +200,33 @@
         @endforeach
     </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const buttons = document.querySelectorAll('.add-to-cart-btn');
+
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const id = this.dataset.id;
+                    const name = this.dataset.name;
+                    const price = this.dataset.price;
+
+                    fetch("{{ route('cart.add') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ id, name, price })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message); // Możesz dodać ładny toast
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
 @endsection
