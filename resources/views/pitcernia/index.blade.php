@@ -188,7 +188,8 @@
                             </div>
                             <div class="text-center mt-3">
                                 <button class="btn btn-outline-secondary btn-lg w-100 shadow add-to-cart-btn"
-                                    data-id="{{ $itemId }}" data-name="{{ $item->name }}"
+                                    data-id="{{ $itemId }}"
+                                    data-name="{{ $item->name }}"
                                     data-price="{{ $item->price }}">
                                     <i class="bi bi-cart-plus me-2"></i> Dodaj do koszyka
                                 </button>
@@ -227,6 +228,33 @@
                 });
             });
         });
+        document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const id = this.dataset.id;
+            const name = this.dataset.name;
+            const price = this.dataset.price;
+
+            fetch("{{ route('cart.add') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ id, name, price })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    alert(data.message || 'Wystąpił problem.');
+                } else {
+                    alert('Dodano do koszyka!');
+                }
+            })
+            .catch(() => alert('Coś poszło nie tak przy dodawaniu do koszyka.'));
+        });
+    });
+});
     </script>
 
 @endsection

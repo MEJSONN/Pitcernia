@@ -71,11 +71,20 @@ class PitcerniaControllers extends Controller
     public function admin()
     {
         $users = User::all();
-        return view('pitcernia.admin', compact('users'));
+        $orders = Order::all();
+
+        return view('pitcernia.admin', compact('users', 'orders'));
     }
 
     public function addToCart(Request $request)
     {
+        if (!auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Musisz być zalogowany, aby dodać do koszyka.'
+            ], 401);
+        }
+
         $cart = session()->get('cart', []);
 
         $id = $request->input('id');
@@ -97,52 +106,51 @@ class PitcerniaControllers extends Controller
         return response()->json(['success' => true, 'message' => 'Dodano do koszyka']);
     }
     public function update(Request $request, $id)
-{
-    $cart = session()->get('cart', []);
-    if (isset($cart[$id])) {
-        if ($request->action === 'increase') {
-            $cart[$id]['quantity']++;
-        } elseif ($request->action === 'decrease' && $cart[$id]['quantity'] > 1) {
-            $cart[$id]['quantity']--;
+    {
+        $cart = session()->get('cart', []);
+        if (isset($cart[$id])) {
+            if ($request->action === 'increase') {
+                $cart[$id]['quantity']++;
+            } elseif ($request->action === 'decrease' && $cart[$id]['quantity'] > 1) {
+                $cart[$id]['quantity']--;
+            }
         }
-    }
-    session()->put('cart', $cart);
-    return redirect()->back();
-}
-
-public function remove($id)
-{
-    $cart = session()->get('cart', []);
-    unset($cart[$id]);
-    session()->put('cart', $cart);
-    return redirect()->back();
-}
-
-public function submitOrder(Request $request)
-{
-    $cart = session('cart', []);
-
-    if (empty($cart)) {
-        return redirect()->back()->with('error', 'Koszyk jest pusty.');
+        session()->put('cart', $cart);
+        return redirect()->back();
     }
 
-    $total = 0;
-    foreach ($cart as $item) {
-        $total += $item['price'] * $item['quantity'];
+    public function remove($id)
+    {
+        $cart = session()->get('cart', []);
+        unset($cart[$id]);
+        session()->put('cart', $cart);
+        return redirect()->back();
     }
 
-    $user = Auth::user();
+    public function submitOrder(Request $request)
+    {
+        $cart = session('cart', []);
 
-    Order::create([
-        'customer_name' => $user ? $user->name : 'Gość', // użyjemy imienia użytkownika, jeśli jest zalogowany
-        'address' => 'Opole, Kościuszki 69', // można też zrobić $user->address
-        'items' => $cart,
-        'total_price' => $total,
-    ]);
+        if (empty($cart)) {
+            return redirect()->back()->with('error', 'Koszyk jest pusty.');
+        }
 
-    session()->forget('cart');
+        $total = 0;
+        foreach ($cart as $item) {
+            $total += $item['price'] * $item['quantity'];
+        }
 
-    return redirect()->route('home')->with('success', 'Zamówienie zostało złożone!');
-}
+        $user = Auth::user();
 
+        Order::create([
+            'customer_name' => $user ? $user->name : 'Gość', // użyjemy imienia użytkownika, jeśli jest zalogowany
+            'address' => 'Opole, Kościuszki 69', // można też zrobić $user->address
+            'items' => $cart,
+            'total_price' => $total,
+        ]);
+
+        session()->forget('cart');
+
+        return redirect()->route('home')->with('success', 'Zamówienie zostało złożone!');
+    }
 }
