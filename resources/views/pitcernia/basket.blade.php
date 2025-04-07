@@ -10,7 +10,10 @@
             @endphp
 
             @forelse ($cart as $id => $item)
-                @php $itemTotal = $item['price'] * $item['quantity']; $total += $itemTotal; @endphp
+                @php
+                    $itemTotal = $item['price'] * $item['quantity'];
+                    $total += $itemTotal;
+                @endphp
 
                 <div class="border rounded p-3 bg-light shadow-sm mb-3">
                     <div class="row align-items-center">
@@ -32,7 +35,8 @@
                                     <button class="btn btn-outline-secondary" type="submit">−</button>
                                 </form>
 
-                                <input type="number" class="form-control text-center" value="{{ $item['quantity'] }}" readonly>
+                                <input type="number" class="form-control text-center" value="{{ $item['quantity'] }}"
+                                    readonly>
 
                                 <form method="POST" action="{{ route('cart.update', $id) }}">
                                     @csrf
@@ -56,7 +60,7 @@
                 </div>
             @empty
                 <div class="alert alert-info">
-                    Twój koszyk jest pusty 🍕
+                    Twój koszyk jest pusty!
                 </div>
             @endforelse
         </div>
@@ -66,7 +70,10 @@
             <div class="border rounded p-3 bg-light shadow">
                 <div class="mb-3 border p-3 rounded">
                     <h5 class="mb-2">Adres dostawy:</h5>
-                    <div class="text-muted">Opole, Kościuszki 69</div>
+                    <div class="text-muted">
+                        {{ Auth::user()->city }}, {{ Auth::user()->street }} {{ Auth::user()->house_number }}
+                    </div>
+
                 </div>
                 <div class="mb-3 border p-3 rounded">
                     <h5 class="mb-2">Cena całkowita:</h5>

@@ -9,7 +9,6 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -22,6 +21,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'surname',
         'email',
         'password',
+        'city',
+        'street',
+        'house_number',
     ];
 
     /**

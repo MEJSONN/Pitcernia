@@ -66,8 +66,14 @@ class PitcerniaControllers extends Controller
     }
     public function Orders()
     {
-        return view('pitcernia.orders');
+        $user = Auth::user();
+    
+        $orders = Order::where('customer_id', $user->id)->get(); // pobieramy wszystkie
+    
+        return view('pitcernia.orders', compact('orders'));
     }
+    
+
     public function admin()
     {
         $users = User::all();
@@ -129,6 +135,10 @@ class PitcerniaControllers extends Controller
 
     public function submitOrder(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Musisz być zalogowany, aby złożyć zamówienie.');
+        }
+
         $cart = session('cart', []);
 
         if (empty($cart)) {
@@ -143,14 +153,16 @@ class PitcerniaControllers extends Controller
         $user = Auth::user();
 
         Order::create([
-            'customer_name' => $user ? $user->name : 'Gość', // użyjemy imienia użytkownika, jeśli jest zalogowany
-            'address' => 'Opole, Kościuszki 69', // można też zrobić $user->address
+            'customer_id' => $user->id, // ✅ poprawka: ID użytkownika
+            'address' => $user->city . ', ' . $user->street . ' ' . $user->house_number, // ✅ automatyczny adres z profilu
             'items' => $cart,
             'total_price' => $total,
+            'status' => 'oczekujące na potwierdzenie', // ✅ jeśli masz kolumnę status
         ]);
 
         session()->forget('cart');
 
         return redirect()->route('main')->with('success', 'Zamówienie zostało złożone!');
     }
+
 }
