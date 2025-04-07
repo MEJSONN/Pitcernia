@@ -151,6 +151,6 @@ class PitcerniaControllers extends Controller
 
         session()->forget('cart');
 
-        return redirect()->route('home')->with('success', 'Zamówienie zostało złożone!');
+        return redirect()->route('main')->with('success', 'Zamówienie zostało złożone!');
     }
 }
