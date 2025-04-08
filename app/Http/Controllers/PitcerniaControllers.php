@@ -79,10 +79,10 @@ class PitcerniaControllers extends Controller
         $yearBack = Carbon::now()->subMonths(12);
 
         $todayOrders = $orders->filter(fn($order) => $order->created_at->isSameDay($today));
-        $todayTotal = $todayOrders->sum('total_price');
-        $monthTotal = $orders->filter(fn($order) => $order->created_at->greaterThanOrEqualTo($monthStart))->sum('total_price');
-        $yearTotal = $orders->filter(fn($order) => $order->created_at->greaterThanOrEqualTo($yearBack))->sum('total_price');
-
+        $todayTotal = $todayOrders->where('status', '!=', 5)->sum('total_price');
+        $monthTotal = $orders->filter(fn($o) => $o->created_at->greaterThanOrEqualTo($monthStart) && $o->status != 5)->sum('total_price');
+        $yearTotal = $orders->filter(fn($o) => $o->created_at->greaterThanOrEqualTo($yearBack) && $o->status != 5)->sum('total_price');
+        
         return view('pitcernia.admin', compact(
             'users',
             'orders',
@@ -178,10 +178,19 @@ class PitcerniaControllers extends Controller
         $request->validate([
             'status' => 'required|integer|in:1,2,3,4,5',
         ]);
-
         $order->status = $request->status;
         $order->save();
+        return response()->json([
+            'message' => 'Status zaktualizowany.',
+            'status' => $order->status,
+            'id' => $order->id
+        ]);
+    }
+    
 
-        return response()->json(['message' => 'Status zaktualizowany.']);
+
+    public function settings()
+    {
+        return view('pitcernia.settings');
     }
 }

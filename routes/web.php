@@ -14,6 +14,7 @@ Route::get('/', [PitcerniaControllers::class, 'index'])->name('main');
 
 Route::get('/basket', [PitcerniaControllers::class, 'basket'])->name('basket');
 Route::get('/orders', [PitcerniaControllers::class, 'orders'])->name('orders');
+Route::get('/settings', [PitcerniaControllers::class, 'settings'])->name('settings');
 
 
 Route::middleware(['auth'])->group(function () {
