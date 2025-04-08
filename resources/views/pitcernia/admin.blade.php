@@ -21,7 +21,6 @@
                                     <th>ID użytkownika</th>
                                     <th>Email</th>
                                     <th>Data utworzenia</th>
-                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -31,15 +30,6 @@
                                         <td>{{ $user->id }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->created_at }}</td>
-                                        <td>
-                                            <select name="status" id="status" class="form-select"
-                                                aria-label="Status zamówienia">
-                                                <option class="" value="1">Oczekujące na potwierdzenie</option>
-                                                <option value="2">Potwierdzone</option>
-                                                <option value="3">Gotowe</option>
-                                                <option value="4">Doręczone</option>
-                                            </select>
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -66,18 +56,19 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Klient</th>
+                                        <th>Klient ID</th>
                                         <th>Adres</th>
                                         <th>Przedmioty</th>
                                         <th>Łączna cena</th>
                                         <th>Data</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($orders as $order)
                                         <tr>
                                             <td>{{ $order->id }}</td>
-                                            <td>{{ $order->customer_name }}</td>
+                                            <td>{{ $order->customer_id }}</td>
                                             <td>{{ $order->address }}</td>
                                             <td>
                                                 <ul>
@@ -90,6 +81,18 @@
                                             </td>
                                             <td>{{ $order->total_price }} zł</td>
                                             <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
+                                            <td>
+                                                <form method="POST" action="{{ route('orders.updateStatus', $order->id) }}">
+                                                    @csrf
+                                                    <select name="status" class="form-select" onchange="this.form.submit()">
+                                                        <option value="1" {{ $order->status == 1 ? 'selected' : '' }}>Oczekujące</option>
+                                                        <option value="2" {{ $order->status == 2 ? 'selected' : '' }}>Potwierdzone</option>
+                                                        <option value="3" {{ $order->status == 3 ? 'selected' : '' }}>Gotowe</option>
+                                                        <option value="4" {{ $order->status == 4 ? 'selected' : '' }}>Doręczone</option>
+                                                        <option value="5" {{ $order->status == 5 ? 'selected' : '' }}>Anulowane</option>
+                                                    </select>
+                                                </form>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

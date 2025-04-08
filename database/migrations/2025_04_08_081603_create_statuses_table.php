@@ -24,6 +24,7 @@ return new class extends Migration
             ['status' => 'Potwierdzone', 'created_at' => now(), 'updated_at' => now()],
             ['status' => 'Gotowe', 'created_at' => now(), 'updated_at' => now()],
             ['status' => 'Doręczone', 'created_at' => now(), 'updated_at' => now()],
+            ['status' => 'Anulowane', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 

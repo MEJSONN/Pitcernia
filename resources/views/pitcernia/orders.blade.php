@@ -3,8 +3,17 @@
 @section('content')
 @php
     $totalSpent = $orders->sum('total_price');
-    $activeOrders = $orders->where('status', 'active');
-    $completedOrders = $orders->where('status', 'zrealizowane');
+
+    $activeOrders = $orders->whereIn('status', [1, 2, 3]);
+    $completedOrders = $orders->where('status', [4, 5]);
+
+    $statusLabels = [
+        1 => ['text' => 'Oczekujące na potwierdzenie', 'class' => 'bg-secondary text-white'],
+        2 => ['text' => 'Potwierdzone', 'class' => 'bg-info text-dark'],
+        3 => ['text' => 'Gotowe', 'class' => 'bg-warning text-dark'],
+        4 => ['text' => 'Doręczone', 'class' => 'bg-success text-white'],
+        5 => ['text' => 'Anulowane', 'class' => 'bg-danger text-white']
+    ];
 @endphp
 
 <div class="container my-4">
@@ -49,8 +58,12 @@
                                 </div>
 
                                 <div class="d-flex justify-content-between align-items-center mt-4 px-1">
-                                    <span class="badge bg-warning text-dark py-2 px-3 fs-6">W przygotowaniu</span>
-                                    <span class="fw-bold fs-5">Razem: {{ number_format($order->total_price, 2, ',', ' ') }} zł</span>
+                                    <span class="badge {{ $statusLabels[$order->status]['class'] }} py-2 px-3 fs-6">
+                                        {{ $statusLabels[$order->status]['text'] }}
+                                    </span>
+                                    <span class="fw-bold fs-5">
+                                        Razem: {{ number_format($order->total_price, 2, ',', ' ') }} zł
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -96,8 +109,13 @@
                                     @endforeach
                                 </div>
 
-                                <div class="d-flex justify-content-end align-items-center mt-4 px-1">
-                                    <span class="fw-bold fs-5">Razem: {{ number_format($order->total_price, 2, ',', ' ') }} zł</span>
+                                <div class="d-flex justify-content-between align-items-center mt-4 px-1">
+                                    <span class="badge {{ $statusLabels[$order->status]['class'] }} py-2 px-3 fs-6">
+                                        {{ $statusLabels[$order->status]['text'] }}
+                                    </span>
+                                    <span class="fw-bold fs-5">
+                                        Razem: {{ number_format($order->total_price, 2, ',', ' ') }} zł
+                                    </span>
                                 </div>
                             </div>
                         </div>
