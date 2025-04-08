@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class PitcerniaControllers extends Controller
 {
@@ -71,8 +72,25 @@ class PitcerniaControllers extends Controller
     public function admin()
     {
         $users = User::all();
-        $orders = Order::with('user')->get(); // dodałem eager loading userów
-        return view('pitcernia.admin', compact('users', 'orders'));
+        $orders = Order::with('user')->get(); // wszystkie zamówienia
+
+        $today = Carbon::today();
+        $monthStart = Carbon::now()->startOfMonth();
+        $yearBack = Carbon::now()->subMonths(12);
+
+        $todayOrders = $orders->filter(fn($order) => $order->created_at->isSameDay($today));
+        $todayTotal = $todayOrders->sum('total_price');
+        $monthTotal = $orders->filter(fn($order) => $order->created_at->greaterThanOrEqualTo($monthStart))->sum('total_price');
+        $yearTotal = $orders->filter(fn($order) => $order->created_at->greaterThanOrEqualTo($yearBack))->sum('total_price');
+
+        return view('pitcernia.admin', compact(
+            'users',
+            'orders',
+            'todayOrders',
+            'todayTotal',
+            'monthTotal',
+            'yearTotal'
+        ));
     }
 
     public function addToCart(Request $request)
@@ -148,18 +166,17 @@ class PitcerniaControllers extends Controller
             // 'address' => $user->city . ', ' . $user->street . ' ' . $user->house_number,
             'items' => $cart,
             'total_price' => $total,
-            'status' => 1, // status jako liczba
+            'status' => 1,
         ]);
 
         session()->forget('cart');
         return redirect()->route('main')->with('success', 'Zamówienie zostało złożone!');
     }
 
-    // ✅ Nowa metoda do zmiany statusu zamówienia
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
-            'status' => 'required|integer|between:1,5',
+            'status' => 'required|integer|in:1,2,3,4,5',
         ]);
 
         $order->status = $request->status;
