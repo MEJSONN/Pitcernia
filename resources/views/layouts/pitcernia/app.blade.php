@@ -78,7 +78,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">
+                                            <a class="dropdown-item" href="{{ route('settings') }}">
                                                 <i class="bi bi-gear-fill me-2"></i>Ustawienia
                                             </a>
                                         </li>
