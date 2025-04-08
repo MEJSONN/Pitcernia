@@ -44,7 +44,7 @@
                                 <div class="col-md-4">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control @error('town') is-invalid @enderror"
-                                            id="floatingtown" name="town" placeholder="Miejscowość" value="{{ old('town') }}" required>
+                                            id="floatingtown" name="city" placeholder="Miejscowość" value="{{ old('town') }}" required>
                                         <label for="floatingtown">Miejscowość</label>
                                         @error('town')
                                             <span class="invalid-feedback" role="alert">
@@ -70,7 +70,7 @@
                                 <div class="col-md-4">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control @error('number') is-invalid @enderror"
-                                            id="floatingnumber" name="number" placeholder="Numer domu" value="{{ old('number') }}" required>
+                                            id="floatingnumber" name="house_number" placeholder="Numer domu" value="{{ old('number') }}" required>
                                         <label for="floatingnumber">Numer domu</label>
                                         @error('number')
                                             <span class="invalid-feedback" role="alert">

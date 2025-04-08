@@ -19,3 +19,8 @@ Route::get('/orders', [PitcerniaControllers::class, 'orders'])->name('orders');
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin', [PitcerniaControllers::class, 'admin'])->name('admin');
 });
+
+Route::post('/add-to-cart', [PitcerniaControllers::class, 'addToCart'])->name('cart.add');
+Route::post('/cart/update/{id}', [PitcerniaControllers::class, 'update'])->name('cart.update');
+Route::post('/cart/remove/{id}', [PitcerniaControllers::class, 'remove'])->name('cart.remove');
+Route::post('/order', [PitcerniaControllers::class, 'submitOrder'])->name('order.submit');

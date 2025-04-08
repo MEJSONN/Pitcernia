@@ -1,99 +1,110 @@
 @extends('layouts.pitcernia.app')
+
 @section('content')
+@php
+    $totalSpent = $orders->sum('total_price');
+    $activeOrders = $orders->where('status', 'active');
+    $completedOrders = $orders->where('status', 'zrealizowane');
+@endphp
 
 <div class="container my-4">
-    <!-- Komunikat -->
     <div class="alert alert-success text-center fw-bold fs-5" role="alert">
-        Wydałeś u nas 2137 zł
+        Wydałeś u nas {{ number_format($totalSpent, 2, ',', ' ') }} zł
     </div>
 
-    <!-- Blok: Aktywne zamówienia -->
-    <div class="mb-4">
+    <!-- Aktywne zamówienia -->
+    <div class="mb-5">
         <h4 class="mb-3">Aktywne zamówienia</h4>
-        <div class="accordion" id="activeOrdersAccordion">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingActive1">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseActive1" aria-expanded="false" aria-controls="collapseActive1">
-                        Zamówienie #1234
-                    </button>
-                </h2>
-                <div id="collapseActive1" class="accordion-collapse collapse" aria-labelledby="headingActive1" data-bs-parent="#activeOrdersAccordion">
-                    <div class="accordion-body">
+        @if($activeOrders->isEmpty())
+            <p class="text-muted">Brak aktywnych zamówień.</p>
+        @else
+            <div class="accordion" id="activeOrdersAccordion">
+                @foreach($activeOrders as $index => $order)
+                    <div class="accordion-item shadow-sm mb-3">
+                        <h2 class="accordion-header" id="headingActive{{ $index }}">
+                            <button class="accordion-button collapsed fw-semibold" type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapseActive{{ $index }}"
+                                    aria-expanded="false"
+                                    aria-controls="collapseActive{{ $index }}">
+                                Zamówienie #{{ $order->id }} z {{ $order->created_at->format('Y-m-d H:i') }}
+                            </button>
+                        </h2>
+                        <div id="collapseActive{{ $index }}" class="accordion-collapse collapse"
+                             aria-labelledby="headingActive{{ $index }}"
+                             data-bs-parent="#activeOrdersAccordion">
+                            <div class="accordion-body">
+                                <div class="mb-2"><strong>Adres dostawy:</strong> {{ $order->address }}</div>
 
-                        <!-- Lista pozycji -->
-                        <div class="row g-2">
-                            <div class="col-md-4">
-                                <div class="border rounded p-3 bg-light h-100">
-                                    <div class="fw-bold">Pizza Wolina</div>
-                                    <div>Ilość: 1</div>
-                                    <div>Cena: 32,00 zł</div>
+                                <div class="row g-3">
+                                    @foreach($order->items as $item)
+                                        <div class="col-12 col-md-6 col-lg-4">
+                                            <div class="border rounded p-3 bg-light h-100">
+                                                <div class="fw-bold">{{ $item['name'] }}</div>
+                                                <div class="text-muted">Ilość: {{ $item['quantity'] }}</div>
+                                                <div class="text-muted">Cena: {{ number_format($item['price'], 2, ',', ' ') }} zł</div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="border rounded p-3 bg-light h-100">
-                                    <div class="fw-bold">Pepsi 0.5L</div>
-                                    <div>Ilość: 2</div>
-                                    <div>Cena: 6,00 zł</div>
+
+                                <div class="d-flex justify-content-between align-items-center mt-4 px-1">
+                                    <span class="badge bg-warning text-dark py-2 px-3 fs-6">W przygotowaniu</span>
+                                    <span class="fw-bold fs-5">Razem: {{ number_format($order->total_price, 2, ',', ' ') }} zł</span>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="container d-flex justify-content-between">
-                            <!-- Status zamówienia -->
-                            <div class="text-end mt-3 fw-bold fs-5 h-100">
-                                <span class="badge bg-warning text-dark">W przygotowaniu</span>
-                            </div>
-                            <!-- Łączna wartość -->
-                            <div class="text-end mt-3 fw-bold fs-5">
-                                Razem: 44,00 zł
                             </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
-        </div>
+        @endif
     </div>
 
-    <!-- Blok: Zrealizowane zamówienia -->
-    <div class="mb-4">
+    <!-- Zrealizowane zamówienia -->
+    <div class="mb-5">
         <h4 class="mb-3">Zrealizowane zamówienia</h4>
-        <div class="accordion" id="completedOrdersAccordion">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingCompleted1">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCompleted1" aria-expanded="false" aria-controls="collapseCompleted1">
-                        Zamówienie #1022
-                    </button>
-                </h2>
-                <div id="collapseCompleted1" class="accordion-collapse collapse" aria-labelledby="headingCompleted1" data-bs-parent="#completedOrdersAccordion">
-                    <div class="accordion-body">
-                        <!-- Lista pozycji -->
-                        <div class="row g-2">
-                            <div class="col-md-4">
-                                <div class="border rounded p-3 bg-light h-100">
-                                    <div class="fw-bold">Zapiekanka Szefa</div>
-                                    <div>Ilość: 1</div>
-                                    <div>Cena: 18,50 zł</div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="border rounded p-3 bg-light h-100">
-                                    <div class="fw-bold">Sok pomarańczowy</div>
-                                    <div>Ilość: 1</div>
-                                    <div>Cena: 6,00 zł</div>
-                                </div>
-                            </div>
-                        </div>
+        @if($completedOrders->isEmpty())
+            <p class="text-muted">Brak zrealizowanych zamówień.</p>
+        @else
+            <div class="accordion" id="completedOrdersAccordion">
+                @foreach($completedOrders as $index => $order)
+                    <div class="accordion-item shadow-sm mb-3">
+                        <h2 class="accordion-header" id="headingCompleted{{ $index }}">
+                            <button class="accordion-button collapsed fw-semibold" type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapseCompleted{{ $index }}"
+                                    aria-expanded="false"
+                                    aria-controls="collapseCompleted{{ $index }}">
+                                Zamówienie #{{ $order->id }} z {{ $order->created_at->format('Y-m-d H:i') }}
+                            </button>
+                        </h2>
+                        <div id="collapseCompleted{{ $index }}" class="accordion-collapse collapse"
+                             aria-labelledby="headingCompleted{{ $index }}"
+                             data-bs-parent="#completedOrdersAccordion">
+                            <div class="accordion-body">
+                                <div class="mb-2"><strong>Adres dostawy:</strong> {{ $order->address }}</div>
 
-                        <!-- Łączna wartość -->
-                        <div class="text-end mt-3 fw-bold fs-5">
-                            Razem: 24,50 zł
+                                <div class="row g-3">
+                                    @foreach($order->items as $item)
+                                        <div class="col-12 col-md-6 col-lg-4">
+                                            <div class="border rounded p-3 bg-light h-100">
+                                                <div class="fw-bold">{{ $item['name'] }}</div>
+                                                <div class="text-muted">Ilość: {{ $item['quantity'] }}</div>
+                                                <div class="text-muted">Cena: {{ number_format($item['price'], 2, ',', ' ') }} zł</div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <div class="d-flex justify-content-end align-items-center mt-4 px-1">
+                                    <span class="fw-bold fs-5">Razem: {{ number_format($order->total_price, 2, ',', ' ') }} zł</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
-        </div>
+        @endif
     </div>
 </div>
-
-
-
 @endsection

@@ -45,7 +45,44 @@
       </h2>
       <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
         <div class="accordion-body">
-            Lista aktywnych zamówień
+            <div class="container">
+                <h2>Aktywne zamówienia</h2>
+                @if($orders->isEmpty())
+                    <p>Brak aktywnych zamówień.</p>
+                @else
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Klient</th>
+                                <th>Adres</th>
+                                <th>Przedmioty</th>
+                                <th>Łączna cena</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($orders as $order)
+                                <tr>
+                                    <td>{{ $order->id }}</td>
+                                    <td>{{ $order->customer_name }}</td>
+                                    <td>{{ $order->address }}</td>
+                                    <td>
+                                        <ul>
+                                            @foreach($order->items as $item)
+                                                <li>{{ $item['name'] }} x{{ $item['quantity'] }} ({{ $item['price'] }} zł)</li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td>{{ $order->total_price }} zł</td>
+                                    <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
+            </div>
+
         </div>
       </div>
     </div>
@@ -57,7 +94,7 @@
         </h2>
         <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
           <div class="accordion-body">
-            Historia zamówień
+            Lista historia zamówień
           </div>
         </div>
       </div>

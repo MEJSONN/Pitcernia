@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use App\Models\User;
+use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth as AuthAlias;
 
 class PitcerniaControllers extends Controller
 {
@@ -63,12 +66,103 @@ class PitcerniaControllers extends Controller
     }
     public function Orders()
     {
-        return view('pitcernia.orders');
+        $user = Auth::user();
+    
+        $orders = Order::where('customer_id', $user->id)->get(); // pobieramy wszystkie
+    
+        return view('pitcernia.orders', compact('orders'));
     }
+    
+
     public function admin()
     {
         $users = User::all();
-        return view('pitcernia.admin', compact('users'));
+        $orders = Order::all();
+
+        return view('pitcernia.admin', compact('users', 'orders'));
+    }
+
+    public function addToCart(Request $request)
+    {
+        if (!auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Musisz być zalogowany, aby dodać do koszyka.'
+            ], 401);
+        }
+
+        $cart = session()->get('cart', []);
+
+        $id = $request->input('id');
+        $name = $request->input('name');
+        $price = $request->input('price');
+
+        if (isset($cart[$id])) {
+            $cart[$id]['quantity']++;
+        } else {
+            $cart[$id] = [
+                'name' => $name,
+                'price' => $price,
+                'quantity' => 1,
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        return response()->json(['success' => true, 'message' => 'Dodano do koszyka']);
+    }
+    public function update(Request $request, $id)
+    {
+        $cart = session()->get('cart', []);
+        if (isset($cart[$id])) {
+            if ($request->action === 'increase') {
+                $cart[$id]['quantity']++;
+            } elseif ($request->action === 'decrease' && $cart[$id]['quantity'] > 1) {
+                $cart[$id]['quantity']--;
+            }
+        }
+        session()->put('cart', $cart);
+        return redirect()->back();
+    }
+
+    public function remove($id)
+    {
+        $cart = session()->get('cart', []);
+        unset($cart[$id]);
+        session()->put('cart', $cart);
+        return redirect()->back();
+    }
+
+    public function submitOrder(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Musisz być zalogowany, aby złożyć zamówienie.');
+        }
+
+        $cart = session('cart', []);
+
+        if (empty($cart)) {
+            return redirect()->back()->with('error', 'Koszyk jest pusty.');
+        }
+
+        $total = 0;
+        foreach ($cart as $item) {
+            $total += $item['price'] * $item['quantity'];
+        }
+
+        $user = Auth::user();
+
+        Order::create([
+            'customer_id' => $user->id, // ✅ poprawka: ID użytkownika
+            'address' => $user->city . ', ' . $user->street . ' ' . $user->house_number, // ✅ automatyczny adres z profilu
+            'items' => $cart,
+            'total_price' => $total,
+            'status' => 'oczekujące na potwierdzenie', // ✅ jeśli masz kolumnę status
+        ]);
+
+        session()->forget('cart');
+
+        return redirect()->route('main')->with('success', 'Zamówienie zostało złożone!');
     }
 
 }
