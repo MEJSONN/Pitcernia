@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('street')->nullable();
             $table->string('house_number')->nullable();
 
+            $table->string('role')->default('user');
+
+
             $table->rememberToken();
             $table->timestamps();
         });
