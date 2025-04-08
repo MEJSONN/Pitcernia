@@ -24,3 +24,5 @@ Route::post('/add-to-cart', [PitcerniaControllers::class, 'addToCart'])->name('c
 Route::post('/cart/update/{id}', [PitcerniaControllers::class, 'update'])->name('cart.update');
 Route::post('/cart/remove/{id}', [PitcerniaControllers::class, 'remove'])->name('cart.remove');
 Route::post('/order', [PitcerniaControllers::class, 'submitOrder'])->name('order.submit');
+
+Route::post('/orders/{order}/status', [PitcerniaControllers::class, 'updateStatus'])->name('orders.updateStatus');

@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Auth as AuthAlias;
 
 class PitcerniaControllers extends Controller
 {
@@ -25,7 +24,6 @@ class PitcerniaControllers extends Controller
 
         if ($request->has('ingredient')) {
             $ingredients = array_slice($request->input('ingredient', []), 0, 6);
-
             $query->where(function ($q) use ($ingredients) {
                 foreach ($ingredients as $ingredient) {
                     $q->where('ingredients', 'LIKE', '%' . $ingredient . '%');
@@ -58,33 +56,28 @@ class PitcerniaControllers extends Controller
         return view('pitcernia.index', compact('data'));
     }
 
-
-    public function Basket()
+    public function basket()
     {
-        //$basket = Basket::all();
         return view('pitcernia.basket');
     }
-    public function Orders()
+
+    public function orders()
     {
         $user = Auth::user();
-    
-        $orders = Order::where('customer_id', $user->id)->get(); // pobieramy wszystkie
-    
+        $orders = Order::where('customer_id', $user->id)->get();
         return view('pitcernia.orders', compact('orders'));
     }
-    
 
     public function admin()
     {
         $users = User::all();
-        $orders = Order::all();
-
+        $orders = Order::with('user')->get(); // dodałem eager loading userów
         return view('pitcernia.admin', compact('users', 'orders'));
     }
 
     public function addToCart(Request $request)
     {
-        if (!auth::check()) {
+        if (!Auth::check()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Musisz być zalogowany, aby dodać do koszyka.'
@@ -92,7 +85,6 @@ class PitcerniaControllers extends Controller
         }
 
         $cart = session()->get('cart', []);
-
         $id = $request->input('id');
         $name = $request->input('name');
         $price = $request->input('price');
@@ -108,9 +100,9 @@ class PitcerniaControllers extends Controller
         }
 
         session()->put('cart', $cart);
-
         return response()->json(['success' => true, 'message' => 'Dodano do koszyka']);
     }
+
     public function update(Request $request, $id)
     {
         $cart = session()->get('cart', []);
@@ -140,7 +132,6 @@ class PitcerniaControllers extends Controller
         }
 
         $cart = session('cart', []);
-
         if (empty($cart)) {
             return redirect()->back()->with('error', 'Koszyk jest pusty.');
         }
@@ -153,16 +144,27 @@ class PitcerniaControllers extends Controller
         $user = Auth::user();
 
         Order::create([
-            'customer_id' => $user->id, // ✅ poprawka: ID użytkownika
-            'address' => $user->city . ', ' . $user->street . ' ' . $user->house_number, // ✅ automatyczny adres z profilu
+            'customer_id' => $user->id,
+            // 'address' => $user->city . ', ' . $user->street . ' ' . $user->house_number,
             'items' => $cart,
             'total_price' => $total,
-            'status' => 'oczekujące na potwierdzenie', // ✅ jeśli masz kolumnę status
+            'status' => 1, // status jako liczba
         ]);
 
         session()->forget('cart');
-
         return redirect()->route('main')->with('success', 'Zamówienie zostało złożone!');
     }
 
+    // ✅ Nowa metoda do zmiany statusu zamówienia
+    public function updateStatus(Request $request, Order $order)
+    {
+        $request->validate([
+            'status' => 'required|integer|between:1,5',
+        ]);
+
+        $order->status = $request->status;
+        $order->save();
+
+        return response()->json(['message' => 'Status zaktualizowany.']);
+    }
 }
