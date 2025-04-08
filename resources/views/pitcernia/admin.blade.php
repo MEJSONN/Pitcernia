@@ -91,7 +91,7 @@
                                                     <option value="2" {{ $order->status == 2 ? 'selected' : '' }}>
                                                         Potwierdzone</option>
                                                     <option value="3" {{ $order->status == 3 ? 'selected' : '' }}>
-                                                        Gotowe</option>
+                                                        Wykonane</option>
                                                     <option value="4" {{ $order->status == 4 ? 'selected' : '' }}>
                                                         Doręczone</option>
                                                     <option value="5" {{ $order->status == 5 ? 'selected' : '' }}>
