@@ -16,6 +16,9 @@ Route::get('/basket', [PitcerniaControllers::class, 'basket'])->name('basket');
 Route::get('/orders', [PitcerniaControllers::class, 'orders'])->name('orders');
 Route::get('/settings', [PitcerniaControllers::class, 'settings'])->name('settings');
 
+Route::post('/settings', [PitcerniaControllers::class, 'updateSettings'])->name('settings.update');
+Route::post('/settings/delete', [PitcerniaControllers::class, 'deleteAccount'])->name('settings.delete');
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin', [PitcerniaControllers::class, 'admin'])->name('admin');

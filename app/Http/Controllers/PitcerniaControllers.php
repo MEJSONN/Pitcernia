@@ -8,6 +8,8 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
 
 class PitcerniaControllers extends Controller
 {
@@ -82,7 +84,7 @@ class PitcerniaControllers extends Controller
         $todayTotal = $todayOrders->where('status', '!=', 5)->sum('total_price');
         $monthTotal = $orders->filter(fn($o) => $o->created_at->greaterThanOrEqualTo($monthStart) && $o->status != 5)->sum('total_price');
         $yearTotal = $orders->filter(fn($o) => $o->created_at->greaterThanOrEqualTo($yearBack) && $o->status != 5)->sum('total_price');
-        
+
         return view('pitcernia.admin', compact(
             'users',
             'orders',
@@ -186,11 +188,60 @@ class PitcerniaControllers extends Controller
             'id' => $order->id
         ]);
     }
-    
+
 
 
     public function settings()
+{
+    $user = Auth::user();
+
+    $hasActiveOrders = \App\Models\Order::where('customer_id', $user->id)
+        ->whereIn('status', [1, 2, 3])
+        ->exists();
+
+    return view('pitcernia.settings', compact('user', 'hasActiveOrders'));
+}
+
+
+    public function updateSettings(Request $request)
     {
-        return view('pitcernia.settings');
+        $user = Auth::user();
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'surname' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
+            'password' => ['nullable', 'string', 'min:6', 'confirmed'],
+        ]);
+
+        $user->name = $request->name;
+        $user->surname = $request->surname;
+        $user->email = $request->email;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return back()->with('success', 'Dane zostały zaktualizowane.');
     }
+    public function deleteAccount()
+    {
+        $user = Auth::user();
+
+        $hasActive = \App\Models\Order::where('customer_id', $user->id)
+            ->whereIn('status', [1, 2, 3])
+            ->exists();
+
+        if ($hasActive) {
+            return back()->with('error', 'Nie możesz usunąć konta z aktywnymi zamówieniami.');
+        }
+
+        Auth::logout();
+        $user->delete();
+
+        return redirect('/')->with('success', 'Konto zostało usunięte.');
+    }
+
 }
