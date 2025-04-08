@@ -22,7 +22,7 @@ return new class extends Migration
         DB::table('statuses')->insert([
             ['status' => 'Oczekujące na potwierdzenie', 'created_at' => now(), 'updated_at' => now()],
             ['status' => 'Potwierdzone', 'created_at' => now(), 'updated_at' => now()],
-            ['status' => 'Gotowe', 'created_at' => now(), 'updated_at' => now()],
+            ['status' => 'Wykonane', 'created_at' => now(), 'updated_at' => now()],
             ['status' => 'Doręczone', 'created_at' => now(), 'updated_at' => now()],
             ['status' => 'Anulowane', 'created_at' => now(), 'updated_at' => now()],
         ]);

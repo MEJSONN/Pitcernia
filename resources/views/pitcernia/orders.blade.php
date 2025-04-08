@@ -3,14 +3,14 @@
 @section('content')
     @php
         $totalSpent = $orders->sum('total_price');
-        $waitingOrders = $orders->where('status', 1);
-        $activeOrders = $orders->whereIn('status', [1, 2, 3]);
+        $waitingOrders = $orders->whereIn('status', [1, 2]);
+        $activeOrders = $orders->whereIn('status', [1,2, 3]);
         $completedOrders = $orders->whereIn('status', [4, 5]);
 
         $statusLabels = [
             1 => ['text' => 'Oczekujące na potwierdzenie', 'class' => 'bg-secondary text-white'],
             2 => ['text' => 'Potwierdzone', 'class' => 'bg-info text-dark'],
-            3 => ['text' => 'Gotowe', 'class' => 'bg-warning text-dark'],
+            3 => ['text' => 'Wykonane', 'class' => 'bg-warning text-dark'],
             4 => ['text' => 'Doręczone', 'class' => 'bg-success text-white'],
             5 => ['text' => 'Anulowane', 'class' => 'bg-danger text-white'],
         ];
