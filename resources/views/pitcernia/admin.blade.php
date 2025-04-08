@@ -1,14 +1,14 @@
 @extends('layouts.pitcernia.app')
 
 @section('content')
-
     @php
-        $tudaySum = $orders->sum('total_price');
+        $activeOrders = $orders->whereIn('status', [1, 2, 3]);
         $historyOrders = $orders->whereIn('status', [4, 5]);
     @endphp
 
     <div class="accordion" id="accordionExample">
-        <!-- Użytkownicy -->
+
+        <!-- UŻYTKOWNICY -->
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
@@ -24,7 +24,6 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>ID użytkownika</th>
                                     <th>Email</th>
                                     <th>Data utworzenia</th>
                                 </tr>
@@ -32,7 +31,6 @@
                             <tbody>
                                 @foreach ($users as $user)
                                     <tr>
-                                        <td>{{ $user->id }}</td>
                                         <td>{{ $user->id }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->created_at }}</td>
@@ -45,7 +43,7 @@
             </div>
         </div>
 
-        <!-- Aktywne zamówienia -->
+        <!-- AKTYWNE ZAMÓWIENIA -->
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -57,23 +55,23 @@
                 <div class="accordion-body">
                     <div class="container">
                         <h2>Aktywne zamówienia</h2>
-                        @if ($orders->isEmpty())
+                        @if ($activeOrders->isEmpty())
                             <p>Brak aktywnych zamówień.</p>
                         @else
                             <table class="table text-center align-items-center">
-                                <thead class="align-middle text-center">
+                                <thead>
                                     <tr>
                                         <th>ID</th>
                                         <th>Klient ID</th>
                                         <th>Adres</th>
                                         <th>Przedmioty</th>
-                                        <th>Łączna cena</th>
+                                        <th>Cena</th>
                                         <th>Data</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($orders as $order)
+                                    @foreach ($activeOrders as $order)
                                         <tr class="align-middle text-center">
                                             <td>{{ $order->id }}</td>
                                             <td>{{ $order->customer_id }}</td>
@@ -87,7 +85,7 @@
                                                     @endforeach
                                                 </ul>
                                             </td>
-                                            <td>{{ $order->total_price }} zł</td>
+                                            <td>{{ number_format($order->total_price, 2, ',', ' ') }} zł</td>
                                             <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
                                             <td>
                                                 <select name="status" class="form-select status-select"
@@ -114,7 +112,7 @@
             </div>
         </div>
 
-        <!-- Historia zamówień -->
+        <!-- HISTORIA ZAMÓWIEŃ -->
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -126,68 +124,68 @@
                 <div class="accordion-body">
                     <div class="container">
                         <h2>Historia zamówień</h2>
+
                         @if ($historyOrders->isEmpty())
-                            <p>Brak zrealizowanych lub anulowanych zamówień.</p>
-                        @else
-                            <table class="table text-center align-items-center">
-                                <thead class="align-middle text-center">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Klient ID</th>
-                                        <th>Adres</th>
-                                        <th>Przedmioty</th>
-                                        <th>Łączna cena</th>
-                                        <th>Data</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($historyOrders as $order)
-                                        <tr class="align-middle text-center">
-                                            <td>{{ $order->id }}</td>
-                                            <td>{{ $order->customer_id }}</td>
-                                            <td>{{ $order->address }}</td>
-                                            <td class="text-start">
-                                                <ul class="mb-0">
-                                                    @foreach ($order->items as $item)
-                                                        <li>{{ $item['name'] }} x{{ $item['quantity'] }}
-                                                            ({{ $item['price'] }} zł)</li>
-                                                    @endforeach
-                                                </ul>
-                                            </td>
-                                            <td>{{ $order->total_price }} zł</td>
-                                            <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
-                                            <td>
-                                                @switch($order->status)
-                                                    @case(4)
-                                                        Doręczone
-                                                    @break
-
-                                                    @case(5)
-                                                        Anulowane
-                                                    @break
-                                                @endswitch
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                            <p id="no-history-msg" class="text-muted">Brak zrealizowanych lub anulowanych zamówień.</p>
                         @endif
-                    </div>
 
+                        <table class="table text-center align-items-center" id="historyTable"
+                            @if ($historyOrders->isEmpty()) style="display: none;" @endif>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Klient ID</th>
+                                    <th>Adres</th>
+                                    <th>Przedmioty</th>
+                                    <th>Cena</th>
+                                    <th>Data</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                @foreach ($historyOrders as $order)
+                                    <tr class="align-middle text-center">
+                                        <td>{{ $order->id }}</td>
+                                        <td>{{ $order->customer_id }}</td>
+                                        <td>{{ $order->address }}</td>
+                                        <td class="text-start">
+                                            <ul class="mb-0">
+                                                @foreach ($order->items as $item)
+                                                    <li>{{ $item['name'] }} x{{ $item['quantity'] }}
+                                                        ({{ $item['price'] }} zł)</li>
+                                                @endforeach
+                                            </ul>
+                                        </td>
+                                        <td>{{ number_format($order->total_price, 2, ',', ' ') }} zł</td>
+                                        <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
+                                        <td>
+                                            @switch($order->status)
+                                                @case(4)
+                                                    Doręczone
+                                                @break
+                                                @case(5)
+                                                    Anulowane
+                                                @break
+                                            @endswitch
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Statystyki -->
+        <!-- DZISIEJSZE ZAMÓWIENIA -->
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapseStats1" aria-expanded="false" aria-controls="collapseStats1">
+                    data-bs-target="#collapseToday" aria-expanded="false" aria-controls="collapseToday">
                     Zamówienia z dnia {{ \Carbon\Carbon::now()->format('Y-m-d') }}
                 </button>
             </h2>
-            <div id="collapseStats1" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div id="collapseToday" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
                     <div class="alert alert-success text-center fw-bold fs-5" role="alert">
                         Zarobiliśmy dzisiaj {{ number_format($todayTotal, 2, ',', ' ') }} zł
@@ -220,7 +218,8 @@
                                                 <ul class="mb-0">
                                                     @foreach ($order->items as $item)
                                                         <li>{{ $item['name'] }} x{{ $item['quantity'] }}
-                                                            ({{ $item['price'] }} zł)</li>
+                                                            ({{ $item['price'] }} zł)
+                                                        </li>
                                                     @endforeach
                                                 </ul>
                                             </td>
@@ -258,42 +257,41 @@
                             </table>
                         @endif
                     </div>
-
                 </div>
             </div>
         </div>
 
+
+        <!-- STATYSTYKI -->
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapseStats2" aria-expanded="false" aria-controls="collapseStats2">
+                    data-bs-target="#collapseStats" aria-expanded="false" aria-controls="collapseStats">
                     Statystyki
                 </button>
             </h2>
-            <div id="collapseStats2" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div id="collapseStats" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
                     <div class="container">
                         <h2 class="mb-3">Statystyki zarobków</h2>
-                    
-                        <div class="alert alert-success fw-semibold fs-5 text-center">
-                            <p class="mb-1">Dzisiaj: {{ number_format($todayTotal, 2, ',', ' ') }} zł</p>
-                            <p class="mb-1">W tym miesiącu: {{ number_format($monthTotal, 2, ',', ' ') }} zł</p>
-                            <p class="mb-0">W ostatnich 12 miesiącach: {{ number_format($yearTotal, 2, ',', ' ') }} zł</p>
+                        <div class="alert alert-success fw-semibold fs-5 text-center mb-0">
+                            <p>Dzisiaj: {{ number_format($todayTotal, 2, ',', ' ') }} zł</p>
+                            <p>W tym miesiącu: {{ number_format($monthTotal, 2, ',', ' ') }} zł</p>
+                            <p>W ostatnich 12 miesiącach: {{ number_format($yearTotal, 2, ',', ' ') }} zł</p>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </div>
+
     </div>
 
+    <!-- TOAST -->
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
-        <div id="statusToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive"
-            aria-atomic="true">
+        <div id="statusToast" class="toast align-items-center text-bg-success border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
-                <div class="toast-body">
-                    Status zaktualizowany!
-                </div>
+                <div class="toast-body">Status zaktualizowany!</div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
                     aria-label="Zamknij"></button>
             </div>
@@ -304,8 +302,7 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const toastElement = document.getElementById('statusToast');
-            const toast = new bootstrap.Toast(toastElement);
+            const toast = new bootstrap.Toast(document.getElementById('statusToast'));
 
             document.querySelectorAll('.status-select').forEach(select => {
                 select.addEventListener('change', function() {
@@ -329,10 +326,13 @@
                         })
                         .then(data => {
                             toast.show();
+                            if (parseInt(data.status) === 4 || parseInt(data.status) === 5) {
+                                const row = document.querySelector(
+                                    `select[data-id="${data.id}"]`)?.closest('tr');
+                                if (row) row.remove();
+                            }
                         })
-                        .catch(err => {
-                            console.error(err);
-                        });
+                        .catch(err => console.error(err));
                 });
             });
         });
