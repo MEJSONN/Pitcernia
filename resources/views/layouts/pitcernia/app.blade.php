@@ -82,19 +82,33 @@
                                                 <i class="bi bi-gear-fill me-2"></i>Ustawienia
                                             </a>
                                         </li>
-                                        <li><hr class="dropdown-divider"></li>
+                                        @php
+                                            $user = Auth::user();
+                                        @endphp
+
+                                        @if ($user && $user->role === 'admin')
+                                            <li>
+                                                <a class="dropdown-item text-primary fw-bold" href="{{ route('admin') }}">
+                                                    <i class="bi bi-shield-lock-fill me-2"></i>Panel administratora
+                                                </a>
+                                            </li>
+                                        @endif
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
                                         <li>
                                             <a class="dropdown-item text-danger" href="{{ route('logout') }}"
                                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                                 <i class="bi bi-box-arrow-right me-2"></i>Wyloguj się
                                             </a>
                                         </li>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            class="d-none">
                                             @csrf
                                         </form>
                                     </ul>
                                 </li>
-                                
+
                             @endguest
                         </ul>
                     </div>
