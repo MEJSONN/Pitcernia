@@ -203,29 +203,36 @@ class PitcerniaControllers extends Controller
 }
 
 
-    public function updateSettings(Request $request)
-    {
-        $user = Auth::user();
+public function updateSettings(Request $request)
+{
+    $user = Auth::user();
 
-        $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'surname' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
-            'password' => ['nullable', 'string', 'min:6', 'confirmed'],
-        ]);
+    $request->validate([
+        'name' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
+        'surname' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
+        'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
+        'city' => ['nullable', 'string', 'max:255'],
+        'street' => ['nullable', 'string', 'max:255'],
+        'house_number' => ['nullable', 'string', 'max:255'],
+        'password' => ['nullable', 'string', 'min:6', 'confirmed'],
+    ]);
 
-        $user->name = $request->name;
-        $user->surname = $request->surname;
-        $user->email = $request->email;
+    $user->name = $request->name;
+    $user->surname = $request->surname;
+    $user->email = $request->email;
+    $user->city = $request->city;
+    $user->street = $request->street;
+    $user->house_number = $request->house_number;
 
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
-        }
-
-        $user->save();
-
-        return back()->with('success', 'Dane zostały zaktualizowane.');
+    if ($request->filled('password')) {
+        $user->password = Hash::make($request->password);
     }
+
+    $user->save();
+
+    return back()->with('success', 'Dane zostały zaktualizowane.');
+}
+
     public function deleteAccount()
     {
         $user = Auth::user();
