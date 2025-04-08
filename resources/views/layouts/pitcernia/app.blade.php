@@ -88,7 +88,7 @@
 
                                         @if ($user && $user->role === 'admin')
                                             <li>
-                                                <a class="dropdown-item text-primary fw-bold" href="{{ route('admin') }}">
+                                                <a class="dropdown-item text-dark" href="{{ route('admin') }}">
                                                     <i class="bi bi-shield-lock-fill me-2"></i>Panel administratora
                                                 </a>
                                             </li>

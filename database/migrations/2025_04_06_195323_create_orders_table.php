@@ -14,8 +14,7 @@ return new class extends Migration {
             $table->decimal('total_price', 8, 2);
             $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
-        });
-        
+        });        
     }
 
     public function down(): void
