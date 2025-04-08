@@ -139,3 +139,32 @@ VITE_APP_NAME="${APP_NAME}"
 #123
 
 ```
+
+```
+INSERT INTO `menus` (`id`, `name`, `description`, `ingredients`, `price`, `size`, `type`, `created_at`, `updated_at`) VALUES
+(1, 'Hawajska', 'Egzotyczna mieszanka szynki i ananasa na klasycznym cieście.', 'Mozzarella, Cheddar, Szynka, Ananas, Sos pomidorowy', 31, 'Średnia', 'pizza', NULL, NULL),
+(2, 'Formaggio Quattro', 'Cztery wyśmienite sery dla prawdziwych seromaniaków.', 'Mozzarella, Gorgonzola, Parmezan, Ricotta, Sos śmietanowy', 40, 'Duża', 'pizza', NULL, NULL),
+(3, 'Vegano Verde', 'Zielona wegańska rozkosz z warzywami i pesto.', 'Cukinia, Bakłażan, Papryka, Wegański ser, Rukola, Pesto', 36, 'Średnia', 'pizza', NULL, NULL),
+(4, 'Spicy Diablo', 'Dla odważnych – pikantna uczta z kiełbasą i chili.', 'Kiełbasa, Ostro papryczki, Mozzarella, Sos pomidorowy', 32, 'Średnia', 'pizza', NULL, NULL),
+(5, 'Di Mare', 'Pizza inspirowana smakami morza i świeżością owoców morza.', 'Krewetki, Kalmary, Czarne oliwki, Czosnek, Mozzarella, Sos pomidorowy', 44, 'Średnia', 'pizza', NULL, NULL),
+(6, 'Cztery Sery', 'Bogactwo serów z nutą klasyki.', 'Mozzarella, Cheddar, Parmezan, Ricotta, Sos pomidorowy', 38, 'Mała', 'pizza', NULL, NULL),
+(7, 'Kurczak Buffalo', 'Pikantna pizza z kurczakiem buffalo i łagodnym sosem ranch.', 'Kurczak, Sos buffalo, Mozzarella, Sos ranch', 35, 'Duża', 'pizza', NULL, NULL),
+(8, 'Margarita Classico', 'Prosta klasyka z sosem pomidorowym i świeżą bazylią.', 'Sos pomidorowy, Mozzarella, Świeża bazylia', 28, 'Mała', 'pizza', NULL, NULL),
+(9, 'Pizza Warzywna', 'Kolorowa, lekka i pełna warzyw dla wegetarian.', 'Papryka, Cebula, Pieczarki, Mozzarella, Sos pomidorowy', 30, 'Średnia', 'pizza', NULL, NULL),
+(10, 'Spinaci Freschi', 'Lekka pizza z młodym szpinakiem i fetą.', 'Szpinak, Feta, Czosnek, Mozzarella, Oliwa, Sos śmietanowy', 33, 'Mała', 'pizza', NULL, NULL),
+(11, 'Pomodoro Fresco', 'Soczyste pomidory i świeże zioła na cienkim cieście.', 'Pomidory cherry, Mozzarella, Bazylia, Oliwa, Sos pomidorowy', 30, 'Mała', 'pizza', NULL, NULL),
+(12, 'Inferno di Napoli', 'Piekielna mieszanka ostrego salami i jalapeño.', 'Salami pikantne, Mozzarella, Jalapeño, Sos pomidorowy, Bazylia, Sos chili', 36, 'Średnia', 'pizza', NULL, NULL),
+(13, 'Wegańska Rozkosz', 'Roślinna propozycja z kurczakiem roślinnym i kremowym sosem.', 'Roślinny kurczak, Sos alfredo, Mozzarella roślinna', 42, 'Mała', 'pizza', NULL, NULL),
+(14, 'Ziołowy Raj', 'Zielona pizza z pesto i świeżymi ziołami.', 'Pesto, Oliwki, Pomidory, Mozzarella', 32, 'Mała', 'pizza', NULL, NULL),
+(15, 'Wolina', 'Legendarna pizza inspirowana smakiem wyspy Wolin.', 'Dojrzewająca szynka, Ser burrata, Rukola, Pomidory konfitowane, Czosnek niedźwiedzi, Sos śmietanowy', 52, 'Duża', 'pizza', NULL, NULL),
+
+-- Zapiekanki
+(16, 'Zapiexy Klasyk', 'Tradycyjna zapiekanka jak za dawnych lat.', 'Bagietka, Pieczarki, Ser żółty, Ketchup, Szczypiorek', 15, 'Mała', 'zapiekanka', NULL, NULL),
+(17, 'Mięsny Jeż', 'Mięsna uczta w formie zapiekanki.', 'Bagietka, Mięso mielone, Cebula, Ser, Sos BBQ', 18, 'Duża', 'zapiekanka', NULL, NULL),
+(18, 'Wegański Power', 'Zapiekanka dla roślinożerców – lekko i smacznie.', 'Bagietka, Tofu, Cukinia, Papryka, Wegański ser, Pesto', 19, 'Średnia', 'zapiekanka', NULL, NULL),
+
+-- Makarony
+(19, 'Carbonara Classica', 'Włoska klasyka z boczkiem i parmezanem.', 'Makaron spaghetti, Boczek, Jajko, Parmezan, Pieprz', 32, 'Średnia', 'makaron', NULL, NULL),
+(20, 'Bolognese Rustico', 'Domowy makaron z mięsnym sosem pomidorowym.', 'Makaron tagliatelle, Mielona wołowina, Sos pomidorowy, Cebula, Czosnek', 34, 'Duża', 'makaron', NULL, NULL),
+(21, 'Spinaci e Ricotta', 'Makaron z delikatną ricottą i świeżym szpinakiem.', 'Makaron ravioli, Ricotta, Szpinak, Masło, Parmezan', 36, 'Mała', 'makaron', NULL, NULL);
+```
