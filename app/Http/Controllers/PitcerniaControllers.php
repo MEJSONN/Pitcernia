@@ -75,9 +75,10 @@ class PitcerniaControllers extends Controller
     {
         $user = Auth::user();
 
-    if (!$user || $user->role !== 'admin') {
-        return redirect('/')->with('error', 'Nie masz dostępu do tej strony.');
-    }
+        if (!$user || $user->role !== 'admin') {
+            abort(404);
+        }
+        
         $users = User::all();
         $orders = Order::with('user')->get(); // wszystkie zamówienia
 
@@ -98,6 +99,18 @@ class PitcerniaControllers extends Controller
             'monthTotal',
             'yearTotal'
         ));
+    }
+    public function updateUserRole(Request $request, $id)
+    {
+        $request->validate([
+            'role' => ['required', Rule::in(['user', 'admin'])],
+        ]);
+    
+        $user = User::findOrFail($id);
+        $user->role = $request->role;
+        $user->save();
+    
+        return back()->with('success', 'Rola użytkownika została zmieniona.');
     }
 
     public function addToCart(Request $request)

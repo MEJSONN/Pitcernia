@@ -24,16 +24,46 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Imię</th>
+                                    <th>Nazwisko</th>
                                     <th>Email</th>
+                                    <th>Zweryfikowano</th>
                                     <th>Data utworzenia</th>
+                                    <th>Adres</th>
+                                    <th>Rola</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($users as $user)
                                     <tr>
                                         <td>{{ $user->id }}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->surname }}</td>
                                         <td>{{ $user->email }}</td>
-                                        <td>{{ $user->created_at }}</td>
+                                        <td>
+                                            @if ($user->email_verified_at)
+                                                <span class="badge bg-success">Tak</span>
+                                            @else
+                                                <span class="badge bg-secondary">Nie</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $user->created_at->format('Y-m-d H:i') }}</td>
+                                        <td>
+                                            {{ $user->city ?? '-' }},
+                                            {{ $user->street ?? '-' }}
+                                            {{ $user->house_number ?? '' }}
+                                        </td>
+                                        <td>
+                                            <form method="POST" action="{{ route('users.updateRole', $user->id) }}">
+                                                @csrf
+                                                <select name="role" class="form-select" onchange="this.form.submit()">
+                                                    <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>
+                                                        Użytkownik</option>
+                                                    <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>
+                                                        Administrator</option>
+                                                </select>
+                                            </form>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -152,7 +182,8 @@
                                             <ul class="mb-0">
                                                 @foreach ($order->items as $item)
                                                     <li>{{ $item['name'] }} x{{ $item['quantity'] }}
-                                                        ({{ $item['price'] }} zł)</li>
+                                                        ({{ $item['price'] }} zł)
+                                                    </li>
                                                 @endforeach
                                             </ul>
                                         </td>
@@ -163,6 +194,7 @@
                                                 @case(4)
                                                     Doręczone
                                                 @break
+
                                                 @case(5)
                                                     Anulowane
                                                 @break
