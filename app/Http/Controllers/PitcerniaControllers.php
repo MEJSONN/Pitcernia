@@ -145,7 +145,7 @@ class PitcerniaControllers extends Controller
 
         Order::create([
             'customer_id' => $user->id,
-            'address' => $user->city . ', ' . $user->street . ' ' . $user->house_number,
+            // 'address' => $user->city . ', ' . $user->street . ' ' . $user->house_number,
             'items' => $cart,
             'total_price' => $total,
             'status' => 1, // status jako liczba
@@ -159,12 +159,12 @@ class PitcerniaControllers extends Controller
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
-            'status' => 'required|integer|between:1,4',
+            'status' => 'required|integer|between:1,5',
         ]);
 
         $order->status = $request->status;
         $order->save();
 
-        return back()->with('success', 'Status zamówienia został zaktualizowany.');
+        return response()->json(['message' => 'Status zaktualizowany.']);
     }
 }
