@@ -61,7 +61,7 @@ class PitcerniaControllers extends Controller
 
     public function basket()
     {
-        return view('pitcernia.basket');1
+        return view('pitcernia.basket');
     }
 
     public function orders()
