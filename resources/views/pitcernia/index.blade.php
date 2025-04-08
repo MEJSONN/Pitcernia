@@ -22,7 +22,7 @@
             <div class="col">
                 <div class="card h-100 cursor-pointer shadow" data-bs-toggle="modal"
                      data-bs-target="#Pizza_{{ $itemId }}">
-                    <img src="{{ asset('images/' . $itemId . '.jpeg') }}" class="card-img-top w-100 h-100"
+                    <img src="{{ asset('images/' . $itemId . '.jpeg') }}" class="card-img-top w-100 h-100" style="max-width: 300px; max-height: 200px"
                          alt="{{ $itemId }}">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
@@ -48,7 +48,7 @@
                         </div>
                         <div class="modal-body p-4 shadow">
                             <div class="text-center mb-3">
-                                <img src="{{ asset('images/' . $itemId . '.jpeg') }}" style="max-width: 600px" class="card-img-top rounded-3"
+                                <img src="{{ asset('images/' . $itemId . '.jpeg') }}" style="max-width: 600px; max-height: 400px" class="card-img-top rounded-3"
                                      alt="{{ $itemId }}">
                             </div>
                             <div class="mt-3 p-3 border rounded-3 shadow">
