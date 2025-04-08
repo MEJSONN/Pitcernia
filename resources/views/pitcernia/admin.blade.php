@@ -1,6 +1,12 @@
 @extends('layouts.pitcernia.app')
 
 @section('content')
+
+    @php
+        $tudaySum = $orders->sum('total_price');
+        $historyOrders = $orders->whereIn('status', [4, 5]);
+    @endphp
+
     <div class="accordion" id="accordionExample">
         <!-- Użytkownicy -->
         <div class="accordion-item">
@@ -118,13 +124,169 @@
             </h2>
             <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                    Lista historia zamówień
+                    <div class="container">
+                        <h2>Historia zamówień</h2>
+                        @if ($historyOrders->isEmpty())
+                            <p>Brak zrealizowanych lub anulowanych zamówień.</p>
+                        @else
+                            <table class="table text-center align-items-center">
+                                <thead class="align-middle text-center">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Klient ID</th>
+                                        <th>Adres</th>
+                                        <th>Przedmioty</th>
+                                        <th>Łączna cena</th>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($historyOrders as $order)
+                                        <tr class="align-middle text-center">
+                                            <td>{{ $order->id }}</td>
+                                            <td>{{ $order->customer_id }}</td>
+                                            <td>{{ $order->address }}</td>
+                                            <td class="text-start">
+                                                <ul class="mb-0">
+                                                    @foreach ($order->items as $item)
+                                                        <li>{{ $item['name'] }} x{{ $item['quantity'] }}
+                                                            ({{ $item['price'] }} zł)</li>
+                                                    @endforeach
+                                                </ul>
+                                            </td>
+                                            <td>{{ $order->total_price }} zł</td>
+                                            <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
+                                            <td>
+                                                @switch($order->status)
+                                                    @case(4)
+                                                        Doręczone
+                                                    @break
+
+                                                    @case(5)
+                                                        Anulowane
+                                                    @break
+                                                @endswitch
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Statystyki -->
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseStats1" aria-expanded="false" aria-controls="collapseStats1">
+                    Zamówienia z dnia {{ \Carbon\Carbon::now()->format('Y-m-d') }}
+                </button>
+            </h2>
+            <div id="collapseStats1" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="alert alert-success text-center fw-bold fs-5" role="alert">
+                        Zarobiliśmy dzisiaj {{ number_format($todayTotal, 2, ',', ' ') }} zł
+                    </div>
+                    <div class="container">
+                        <h2 class="mb-3">Dzisiejsze zamówienia</h2>
+
+                        @if ($todayOrders->isEmpty())
+                            <p class="text-muted">Brak zamówień z dzisiaj.</p>
+                        @else
+                            <table class="table text-center align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>ID użytkownika</th>
+                                        <th>Adres</th>
+                                        <th>Przedmioty</th>
+                                        <th>Łączna cena</th>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($todayOrders as $order)
+                                        <tr>
+                                            <td>{{ $order->id }}</td>
+                                            <td>{{ $order->customer_id }}</td>
+                                            <td>{{ $order->address ?? '-' }}</td>
+                                            <td class="text-start">
+                                                <ul class="mb-0">
+                                                    @foreach ($order->items as $item)
+                                                        <li>{{ $item['name'] }} x{{ $item['quantity'] }}
+                                                            ({{ $item['price'] }} zł)</li>
+                                                    @endforeach
+                                                </ul>
+                                            </td>
+                                            <td>{{ number_format($order->total_price, 2, ',', ' ') }} zł</td>
+                                            <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
+                                            <td>
+                                                @switch($order->status)
+                                                    @case(1)
+                                                        Oczekujące
+                                                    @break
+
+                                                    @case(2)
+                                                        Potwierdzone
+                                                    @break
+
+                                                    @case(3)
+                                                        Wykonane
+                                                    @break
+
+                                                    @case(4)
+                                                        Doręczone
+                                                    @break
+
+                                                    @case(5)
+                                                        Anulowane
+                                                    @break
+
+                                                    @default
+                                                        Nieznany
+                                                @endswitch
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseStats2" aria-expanded="false" aria-controls="collapseStats2">
+                    Statystyki
+                </button>
+            </h2>
+            <div id="collapseStats2" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="container">
+                        <h2 class="mb-3">Statystyki zarobków</h2>
+                    
+                        <div class="alert alert-success fw-semibold fs-5 text-center">
+                            <p class="mb-1">Dzisiaj: {{ number_format($todayTotal, 2, ',', ' ') }} zł</p>
+                            <p class="mb-1">W tym miesiącu: {{ number_format($monthTotal, 2, ',', ' ') }} zł</p>
+                            <p class="mb-0">W ostatnich 12 miesiącach: {{ number_format($yearTotal, 2, ',', ' ') }} zł</p>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ✅ TOAST Bootstrap -->
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
         <div id="statusToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive"
             aria-atomic="true">
