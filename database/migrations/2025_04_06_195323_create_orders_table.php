@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->string('address');
             $table->json('items');
             $table->decimal('total_price', 8, 2);
-            $table->string('status')->default('oczekujące na potwierdzenie'); // 🟢 tu ustawiamy default
+            $table->string('status')->default('active'); // 🟢 tu ustawiamy default
             $table->timestamps();
         });
     }
