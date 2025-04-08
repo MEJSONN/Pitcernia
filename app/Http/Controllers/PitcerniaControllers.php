@@ -73,6 +73,11 @@ class PitcerniaControllers extends Controller
 
     public function admin()
     {
+        $user = Auth::user();
+
+    if (!$user || $user->role !== 'admin') {
+        return redirect('/')->with('error', 'Nie masz dostępu do tej strony.');
+    }
         $users = User::all();
         $orders = Order::with('user')->get(); // wszystkie zamówienia
 
