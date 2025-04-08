@@ -20,7 +20,10 @@ Route::post('/settings', [PitcerniaControllers::class, 'updateSettings'])->name(
 Route::post('/settings/delete', [PitcerniaControllers::class, 'deleteAccount'])->name('settings.delete');
 
 
-Route::get('/admin', [PitcerniaControllers::class, 'admin'])->middleware('auth')->name('admin');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin', [PitcerniaControllers::class, 'admin'])->name('admin');
+    Route::post('/users/{id}/role', [PitcerniaControllers::class, 'updateUserRole'])->name('users.updateRole');
+});
 
 Route::post('/add-to-cart', [PitcerniaControllers::class, 'addToCart'])->name('cart.add');
 Route::post('/cart/update/{id}', [PitcerniaControllers::class, 'update'])->name('cart.update');
