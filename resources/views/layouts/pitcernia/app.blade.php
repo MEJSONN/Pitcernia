@@ -8,16 +8,27 @@
     <title>Pitcernia</title>
     <link rel="icon" href="{{ asset('images/logo.svg') }}" type="image/svg+xml">
 
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
-    <!-- Bootstrap JS z Toastem i innymi komponentami -->
-    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> --}}
+    <Style>
+// Drop down menu
+.dropdown-menu .dropdown-item:active {
+    background-color: #f0f0f0 !important;
+    border-radius: 6px !important;
+    color: black !important;
+}
 
-
+//Rozwijana lista - kolor
+.accordion-button:not(.collapsed) {
+    background-color: #f0f0f0 !important;
+    color: #212529;
+    border-radius: 0.375rem;
+    box-shadow: none;
+}
+    </Style>
 
 </head>
 
@@ -128,6 +139,7 @@
         &copy;2025 Pitcernia. Wszystkie prawa zastrzeżone.
     </footer>
     @stack('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeo5kyRj0r8jW9clpIMbK0pH/2JkU7Sk5CWzMj4v9Pp1dF2F" crossorigin="anonymous"></script>
 </body>
 
 </html>
