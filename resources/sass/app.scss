@@ -24,11 +24,13 @@
 }
 
 // Drop down menu
-.dropdown-menu .dropdown-item:active {
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
     background-color: #f0f0f0 !important;
     border-radius: 6px !important;
     color: black !important;
 }
+
 
 //Rozwijana lista - kolor
 .accordion-button:not(.collapsed) {
