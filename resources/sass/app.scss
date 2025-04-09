@@ -24,23 +24,31 @@
 }
 
 // Drop down menu
+.dropdown-menu .dropdown-item {
+    border-radius: 6px !important;
+    transition: background-color 0.2s ease;
+}
+
 .dropdown-menu .dropdown-item:hover,
 .dropdown-menu .dropdown-item:focus {
     background-color: #f0f0f0 !important;
-    border-radius: 6px !important;
     color: black !important;
 }
 
-.dropdown-menu .dropdown-item.active {
+.dropdown-menu .dropdown-item.active,
+.dropdown-menu .dropdown-item:active {
     background-color: #e0e0e0 !important;
-    border-radius: 6px !important;
     color: black !important;
 }
 
-// Accordion (bez niebieskiego)
+// Accordion - brak niebieskiego i ładne kolory
+.accordion-button {
+    transition: background-color 0.2s ease;
+}
+
 .accordion-button:not(.collapsed) {
     background-color: #f0f0f0 !important;
-    color: #212529;
+    color: #212529 !important;
     border-radius: 0.375rem;
     box-shadow: none !important;
 }
