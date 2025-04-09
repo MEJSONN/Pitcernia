@@ -72,7 +72,6 @@
                                                 <i class="bi bi-basket-fill me-2"></i>Moje zamówienia
                                             </a>
                                         </li>
-                                        <li><a class="dropdown-item active" href="#">Test Active</a></li>
                                         <li>
                                             <a class="dropdown-item" href="{{ route('settings') }}">
                                                 <i class="bi bi-gear-fill me-2"></i>Ustawienia
