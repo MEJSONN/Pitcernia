@@ -213,7 +213,7 @@ class PitcerniaControllers extends Controller
 {
     $user = Auth::user();
 
-    $hasActiveOrders = \App\Models\Order::where('customer_id', $user->id)
+    $hasActiveOrders = Order::where('customer_id', $user->id)
         ->whereIn('status', [1, 2, 3])
         ->exists();
 
@@ -255,7 +255,7 @@ public function updateSettings(Request $request)
     {
         $user = Auth::user();
 
-        $hasActive = \App\Models\Order::where('customer_id', $user->id)
+        $hasActive = Order::where('customer_id', $user->id)
             ->whereIn('status', [1, 2, 3])
             ->exists();
 
