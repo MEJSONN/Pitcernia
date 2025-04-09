@@ -13,7 +13,7 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
-    <Style>
+    <style>
 // Drop down menu
 .dropdown-menu .dropdown-item:active {
     background-color: #f0f0f0 !important;
