@@ -46,7 +46,7 @@
                                         </td>
                                         <td>{{ $user->created_at->format('Y-m-d H:i') }}</td>
                                         <td>{{ $user->city ?? '-' }}, {{ $user->street ?? '-' }} {{ $user->house_number ?? '' }}</td>
-                                        <td>
+                                        <td style="min-width: 160px;">
                                             <form method="POST" action="{{ route('users.updateRole', $user->id) }}">
                                                 @csrf
                                                 <select name="role" class="form-select" onchange="this.form.submit()">
@@ -104,8 +104,8 @@
                                             </td>
                                             <td>{{ number_format($order->total_price, 2, ',', ' ') }} zł</td>
                                             <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
-                                            <td>
-                                                <select class="form-select status-select" data-id="{{ $order->id }}">
+                                            <td style="min-width: 160px;">
+                                                <select class="form-select status-select w-100" data-id="{{ $order->id }}">
                                                     @foreach ([1=>'Oczekujące',2=>'Potwierdzone',3=>'Wykonane',4=>'Doręczone',5=>'Anulowane'] as $key=>$label)
                                                         <option value="{{ $key }}" @selected($order->status == $key)>{{ $label }}</option>
                                                     @endforeach
