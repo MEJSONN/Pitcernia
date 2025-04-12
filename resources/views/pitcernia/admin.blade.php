@@ -9,7 +9,7 @@
 <div class="container my-4">
     <div class="accordion" id="accordionExample">
 
-        <!-- UŻYTKOWNICY -->
+        <!-- Użytkownicy -->
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUsers">
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <!-- AKTYWNE ZAMÓWIENIA -->
+        <!-- Aktywne zamówienia -->
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseActive">
@@ -121,7 +121,7 @@
             </div>
         </div>
 
-        <!-- HISTORIA ZAMÓWIEŃ -->
+        <!-- Historia zamówień -->
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseHistory">
@@ -144,8 +144,8 @@
                                     @foreach ($historyOrders as $order)
                                         <tr>
                                             <td>{{ $order->id }}</td>
-                                            <td>{{ $order->customer_id }}</td>
-                                            <td>{{ $order->address }}</td>
+                                            <td>{{ $order->customer_id ?: 'Brak danych' }}</td>
+                                            <td>{{ $order->address ?: 'Brak danych' }}</td>
                                             <td class="text-start">
                                                 <ul>
                                                     @foreach ($order->items as $item)
@@ -165,6 +165,27 @@
                 </div>
             </div>
         </div>
+        <!-- STATYSTYKI -->
+         <div class="accordion-item">
+             <h2 class="accordion-header">
+                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                     data-bs-target="#collapseStats" aria-expanded="false" aria-controls="collapseStats">
+                     Statystyki
+                 </button>
+             </h2>
+             <div id="collapseStats" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                 <div class="accordion-body">
+                     <div class="container">
+                         <h2 class="mb-3">Statystyki zarobków</h2>
+                         <div class="alert alert-success fw-semibold fs-5 text-center mb-0">
+                             <p>Dzisiaj: {{ number_format($todayTotal, 2, ',', ' ') }} zł</p>
+                             <p>W tym miesiącu: {{ number_format($monthTotal, 2, ',', ' ') }} zł</p>
+                             <p>W ostatnich 12 miesiącach: {{ number_format($yearTotal, 2, ',', ' ') }} zł</p>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
     </div>
 
     <!-- TOAST -->

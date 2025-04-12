@@ -12,6 +12,7 @@
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
+        <!-- Formularz - ustawienia -->
         <form method="POST" action="{{ route('settings.update') }}">
             @csrf
 
@@ -102,7 +103,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <button type="submit" class="btn btn-outline-primary">Zapisz zmiany</button>
 
-                {{-- Usuwanie konta --}}
+                <!-- Usuń kontot -->
                 @if ($hasActiveOrders)
                     <button type="button" class="btn btn-outline-danger" data-bs-container="body" data-bs-toggle="popover"
                         data-bs-placement="top" data-bs-content="Masz aktywne zamówienia!">
@@ -119,7 +120,7 @@
         </form>
     </div>
 
-    <!-- MODAL potwierdzenia usunięcia -->
+    <!-- Modal - potwierdzenia usunięcia -->
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
@@ -141,13 +142,15 @@
             </div>
         </div>
     </div>
+
+    <!-- skrypt popover -->
     @push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const popovers = document.querySelectorAll('[data-bs-toggle="popover"]');
-        popovers.forEach(p => new bootstrap.Popover(p));
-    });
-</script>
-@endpush
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const popovers = document.querySelectorAll('[data-bs-toggle="popover"]');
+                popovers.forEach(p => new bootstrap.Popover(p));
+            });
+        </script>
+    @endpush
 
 @endsection

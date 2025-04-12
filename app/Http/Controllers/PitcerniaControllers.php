@@ -78,9 +78,9 @@ class PitcerniaControllers extends Controller
         if (!$user || $user->role !== 'admin') {
             abort(404);
         }
-        
+
         $users = User::all();
-        $orders = Order::with('user')->get(); // wszystkie zamówienia
+        $orders = Order::with('user')->get();
 
         $today = Carbon::today();
         $monthStart = Carbon::now()->startOfMonth();
@@ -105,11 +105,11 @@ class PitcerniaControllers extends Controller
         $request->validate([
             'role' => ['required', Rule::in(['user', 'admin'])],
         ]);
-    
+
         $user = User::findOrFail($id);
         $user->role = $request->role;
         $user->save();
-    
+
         return back()->with('success', 'Rola użytkownika została zmieniona.');
     }
 
@@ -183,7 +183,6 @@ class PitcerniaControllers extends Controller
 
         Order::create([
             'customer_id' => $user->id,
-            // 'address' => $user->city . ', ' . $user->street . ' ' . $user->house_number,
             'items' => $cart,
             'total_price' => $total,
             'status' => 1,

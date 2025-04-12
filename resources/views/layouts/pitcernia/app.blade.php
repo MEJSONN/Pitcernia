@@ -16,6 +16,35 @@
 
 </head>
 
+<style>
+.navbar-nav .nav-link {
+    font-size: 110%;
+    margin-right: 15px;
+}
+
+.logo-text {
+    font-size: 110%;
+}
+
+.nav-link.active {
+    color: #1D1616 !important;
+    font-weight: 600 !important;
+}
+
+.dropdown-menu .dropdown-item:active {
+    background-color: #f0f0f0 !important;
+    border-radius: 6px !important;
+    color: black !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #f0f0f0 !important;
+    color: #212529;
+    border-radius: 0.375rem;
+    box-shadow: none;
+}
+</style>
+
 <body>
 
     <div id="app">

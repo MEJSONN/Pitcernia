@@ -3,7 +3,7 @@
 @section('content')
     @php
         $totalSpent = $orders->sum('total_price');
-        $waitingOrders = $orders->whereIn('status', [1, 2]);
+        $waitingOrders = $orders->whereIn('status', [1]);
         $activeOrders = $orders->whereIn('status', [1, 2, 3]);
         $completedOrders = $orders->whereIn('status', [4, 5]);
 
@@ -32,13 +32,13 @@
                         <div class="accordion-item shadow-sm mb-3">
                             <h2 class="accordion-header" id="headingActive{{ $index }}">
                                 <button class="accordion-button collapsed fw-semibold" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseActive{{ $index }}"
-                                        aria-expanded="false" aria-controls="collapseActive{{ $index }}">
+                                    data-bs-toggle="collapse" data-bs-target="#collapseActive{{ $index }}"
+                                    aria-expanded="false" aria-controls="collapseActive{{ $index }}">
                                     Zamówienie #{{ $order->id }} z {{ $order->created_at->format('Y-m-d H:i') }}
                                 </button>
                             </h2>
                             <div id="collapseActive{{ $index }}" class="accordion-collapse collapse"
-                                 aria-labelledby="headingActive{{ $index }}" data-bs-parent="#activeOrdersAccordion">
+                                aria-labelledby="headingActive{{ $index }}" data-bs-parent="#activeOrdersAccordion">
                                 <div class="accordion-body">
                                     <div class="mb-2"><strong>Adres dostawy:</strong> {{ $order->address }}</div>
 
@@ -54,17 +54,20 @@
                                             </div>
                                         @endforeach
                                     </div>
-
                                     <div class="row align-items-center mt-4 g-2">
                                         <div class="col-12 col-md-4 text-center text-md-start">
-                                            <span class="badge {{ $statusLabels[$order->status]['class'] }} py-2 px-3 fs-6">
+                                            <span
+                                                class="{{ $statusLabels[$order->status]['class'] }} fs-6 py-2 px-3 d-inline-block align-middle rounded"
+                                                style="height: 38px; line-height: 24px;">
                                                 {{ $statusLabels[$order->status]['text'] }}
                                             </span>
                                         </div>
                                         <div class="col-12 col-md-4 text-center">
-                                            @if ($waitingOrders->isNotEmpty() && $waitingOrders->first()->id === $order->id)
-                                                <button type="button" class="btn btn-danger w-100 w-md-auto"
-                                                        onclick="confirmCancel({{ $order->id }})">
+                                            @if ($waitingOrders->contains('id', $order->id))
+                                                <button type="button"
+                                                    class="btn btn-danger fs-6 py-2 px-3 d-inline-block align-middle rounded border-0"
+                                                    style="height: 38px; line-height: 24px;"
+                                                    onclick="confirmCancel({{ $order->id }})">
                                                     Anuluj zamówienie
                                                 </button>
                                             @endif
@@ -81,7 +84,7 @@
             @endif
         </div>
 
-        <!-- Zrealizowane zamówienia -->
+        <!-- Historia zamówień -->
         <div class="mb-5">
             <h4>Historia zamówień</h4>
             @if ($completedOrders->isEmpty())
@@ -92,13 +95,14 @@
                         <div class="accordion-item shadow-sm mb-3">
                             <h2 class="accordion-header" id="headingCompleted{{ $index }}">
                                 <button class="accordion-button collapsed fw-semibold" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseCompleted{{ $index }}"
-                                        aria-expanded="false" aria-controls="collapseCompleted{{ $index }}">
+                                    data-bs-toggle="collapse" data-bs-target="#collapseCompleted{{ $index }}"
+                                    aria-expanded="false" aria-controls="collapseCompleted{{ $index }}">
                                     Zamówienie #{{ $order->id }} z {{ $order->created_at->format('Y-m-d H:i') }}
                                 </button>
                             </h2>
                             <div id="collapseCompleted{{ $index }}" class="accordion-collapse collapse"
-                                 aria-labelledby="headingCompleted{{ $index }}" data-bs-parent="#completedOrdersAccordion">
+                                aria-labelledby="headingCompleted{{ $index }}"
+                                data-bs-parent="#completedOrdersAccordion">
                                 <div class="accordion-body">
                                     <div class="mb-2"><strong>Adres dostawy:</strong> {{ $order->address }}</div>
                                     <div class="row g-3">
@@ -116,7 +120,8 @@
 
                                     <div class="row align-items-center justify-content-between mt-4 g-2">
                                         <div class="col-12 col-md-4 text-center text-md-start">
-                                            <span class="badge {{ $statusLabels[$order->status]['class'] }} py-2 px-3 fs-6">
+                                            <span
+                                                class="badge {{ $statusLabels[$order->status]['class'] }} py-2 px-3 fs-6">
                                                 {{ $statusLabels[$order->status]['text'] }}
                                             </span>
                                         </div>
@@ -124,7 +129,7 @@
                                             Razem: {{ number_format($order->total_price, 2, ',', ' ') }} zł
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -134,7 +139,7 @@
         </div>
     </div>
 
-    <!-- Bootstrap Modal -->
+    <!-- Modal - anulacja zamówienia -->
     <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -153,6 +158,7 @@
         </div>
     </div>
 
+    <!-- Skrypt - Modal -->
     @push('scripts')
         <script>
             let orderIdToCancel;
@@ -165,14 +171,16 @@
 
             document.getElementById('confirmCancelBtn').onclick = () => {
                 fetch(`/orders/${orderIdToCancel}/status`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({status: 5})
-                }).then(res => res.ok ? location.reload() : Promise.reject(res))
-                  .catch(() => alert('Nie udało się anulować zamówienia'));
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            status: 5
+                        })
+                    }).then(res => res.ok ? location.reload() : Promise.reject(res))
+                    .catch(() => alert('Nie udało się anulować zamówienia'));
             };
         </script>
     @endpush
