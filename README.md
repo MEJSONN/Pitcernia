@@ -3,8 +3,8 @@
 **Pitcernia** to system zamówień online dla pizzerii – projekt oparty o framework Laravel, stworzony przez:
 
 - **Maciej Płaza**
-- **Jakub P.**
-- **Szymon M.**
+- **Jakub Passowicz**
+- **Szymon Mrowiec**
 
 ---
 
