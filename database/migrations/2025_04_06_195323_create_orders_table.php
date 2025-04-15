@@ -14,13 +14,17 @@ return new class extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description');
-            $table->text('ingredients');
-            $table->integer('price');
-            $table->string('size');
-            $table->string('type');
-            $table->timestamps();
+             $table->foreignId('customer_id')->nullable()->constrained('users')->onDelete('set null');
+             $table->json('items');
+             $table->decimal('total_price', 8, 2);
+             $table->unsignedTinyInteger('status')->default(1);
+             $table->string('name');
+             $table->text('description');
+             $table->text('ingredients');
+             $table->integer('price');
+             $table->string('size');
+             $table->string('type');
+             $table->timestamps();
         });
 
         DB::table('menus')->insert([
