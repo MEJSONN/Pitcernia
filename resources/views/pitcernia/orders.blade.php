@@ -2,7 +2,7 @@
 
 @section('content')
     @php
-        $totalSpent = $orders->sum('total_price');
+        $totalSpent = $orders->where('status', '!=', 5)->sum('total_price');
         $waitingOrders = $orders->whereIn('status', [1]);
         $activeOrders = $orders->whereIn('status', [1, 2, 3]);
         $completedOrders = $orders->whereIn('status', [4, 5]);
